@@ -3,10 +3,12 @@ session_start();
 
 $do = isset($_GET["do"]) ? $_GET["do"] : "login";
 
-$filename = "connect.php";
+$filename = "../connect.php";
+
+include "../classes/users.class.php";
 
 if($do == "login") {
-    include "init.php";
+    include "../init.php";
 ?>
 <section class="login">
 
@@ -50,8 +52,6 @@ if($do == "login") {
 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        include "classes/users.class.php";
-
         $username = isset($_POST["username"]) ? $_POST["username"] : null;
         $password = isset($_POST["password"]) ? $_POST["password"] : null;
         $hashPass = sha1($password);
@@ -65,6 +65,46 @@ if($do == "login") {
         } else {
             echo -1;
         }
+
+    }
+    
+} elseif($do == "registerform") {
+
+    if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        $user_id = isset($_POST["user_id"]) ? $_POST["user_id"] : null;
+        $formStat = isset($_POST["form-stat"]) ? $_POST["form-stat"] : null;
+        $fname = isset($_POST["fname"]) ? $_POST["fname"] : null;
+        $lname = isset($_POST["lname"]) ? $_POST["lname"] : null;
+        $username = isset($_POST["username"]) ? $_POST["username"] : null;
+        $password = isset($_POST["password"]) ? $_POST["password"] : null;
+        $email = isset($_POST["email"]) ? $_POST["email"] : null;
+        $phoneNumber = isset($_POST["phoneNumber"]) ? $_POST["phoneNumber"] : null;
+        $prv = isset($_POST["prv"]) ? $_POST["prv"] : null;
+        
+        $hashPass = !empty($password) ? sha1($password) : null;
+
+        $obj = new Users();
+        $obj->setParams($fname, $lname, $username, $hashPass, $email, $phoneNumber, $prv);
+
+        $passwordStat = !is_null($hashPass) ? true : false;
+
+        if($formStat == "update") {
+            $obj->user_id = $user_id;
+        }
+
+        if($formStat == "insert" && !$passwordStat) {
+            echo -2;
+            exit();
+        }
+
+        echo $obj->save($filename, $formStat ,$passwordStat);
+
+        // if($obj->save($filename, $formStat ,$passwordStat)) {
+        //     echo 1;
+        // } else {
+        //     echo -1;
+        // }
 
     }
 }

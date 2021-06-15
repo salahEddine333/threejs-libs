@@ -4,3 +4,21 @@
 body {
     background-color: #F7F7F7;
 }
+
+.side-active {
+    background-color: #17a2b8 !important;
+    color: #FFF !important;
+}
+
+.dashboard > .container > .row {
+    margin: 7px 0 !important;
+}
+
+.side-item {
+    padding: .7rem;
+    margin: 5px 0;
+    text-decoration: none;
+}
+.side-item:hover {
+    text-decoration: none;
+}
